@@ -30,7 +30,7 @@
       const view = new MapView({
         map: webmap,
         center: [0, 90],
-        zoom: 5, // scale: 72223.819286
+        zoom: 4, // scale: 72223.819286
         container: "viewDiv" // Div element
       });
       const scalebar = new ScaleBar({
@@ -57,6 +57,12 @@
             }
           }
         });
+
+        layerList.visibleElements = {
+          statusIndicators: false
+        };
+
+
         view.ui.add(layerList, "top-right");
 
     });
