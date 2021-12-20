@@ -1,0 +1,234 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Warming of the Arctic by 2060
+    </title>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.22/esri/themes/dark/main.css"
+    />
+
+    <script src="https://js.arcgis.com/4.22/"></script>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/views/SceneView",
+        "esri/layers/ElevationLayer",
+        "esri/layers/BaseElevationLayer",
+        "esri/layers/VectorTileLayer",
+        "esri/Basemap",
+        "esri/layers/TileLayer",
+        "esri/widgets/Home"
+      ], (
+        Map,
+        SceneView,
+        ElevationLayer,
+        BaseElevationLayer,
+        VectorTileLayer,
+        Basemap,
+        TileLayer,
+        Home
+      ) => {
+        //////////////////////////////////////////////
+        //
+        //   Create a subclass of BaseElevationLayer
+        //
+        /////////////////////////////////////////////
+
+        const ExaggeratedElevationLayer = BaseElevationLayer.createSubclass({
+          // Add an exaggeration property whose value will be used
+          // to multiply the elevations at each tile by a specified
+          // factor. In this case terrain will render 100x the actual elevation.
+
+          properties: {
+            exaggeration: 250000
+          },
+
+          // The load() method is called when the layer is added to the map
+          // prior to it being rendered in the view.
+          load: function () {
+            // TopoBathy3D contains elevation values for both land and ocean ground
+            this._elevation = new ElevationLayer({
+              url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/diff_Layer_2060_elevation/ImageServer"
+            });
+
+            // wait for the elevation layer to load before resolving load()
+            this.addResolvingPromise(
+              this._elevation.load().then(() => {
+                // get tileInfo, spatialReference and fullExtent from the elevation service
+                // this is required for elevation services with a custom spatialReference
+                this.tileInfo = this._elevation.tileInfo;
+                this.spatialReference = this._elevation.spatialReference;
+                this.fullExtent = this._elevation.fullExtent;
+              })
+            );
+
+            return this;
+          },
+
+          // Fetches the tile(s) visible in the view
+          fetchTile: function (level, row, col, options) {
+            // calls fetchTile() on the elevationlayer for the tiles
+            // visible in the view
+            return this._elevation.fetchTile(level, row, col, options).then(
+              function (data) {
+                const exaggeration = this.exaggeration;
+                // `data` is an object that contains the
+                // the width and the height of the tile in pixels,
+                // and the values of each pixel
+                for (let i = 0; i < data.values.length; i++) {
+                  // Multiply the given pixel value
+                  // by the exaggeration value
+                  data.values[i] = data.values[i] * exaggeration;
+                }
+
+                return data;
+              }.bind(this)
+            );
+          }
+        });
+
+        const basemap = new Basemap({
+          baseLayers: [
+            new TileLayer({
+              url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/diff_Layer_2060_color_3/MapServer"
+            })
+          ]
+        });
+
+        const elevationLayer = new ExaggeratedElevationLayer();
+
+          // Add the countries vector tile layer
+        const vtlLayer = new VectorTileLayer({
+          url: "https://vectortileservices.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/countries_w_no_attributes/VectorTileServer"
+          });
+
+        // Add the exaggerated elevation layer to the map's ground
+        // in place of the default world elevation service
+        const map = new Map({
+          basemap: basemap,
+          ground: {
+            layers: [elevationLayer]
+          },
+          layers: [vtlLayer],
+        });
+
+        const view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          alphaCompositingEnabled: true,
+          qualityProfile: "high",
+          camera: {
+            position: [-55.039, 14.948, 19921223.3],
+            heading: 2.03,
+            tilt: 0.13
+          },
+          environment: {
+            background: {
+              type: "color",
+              //color: [255, 252, 244, 0]
+              color: '#291a0a'
+            },
+            starsEnabled: true,
+            atmosphereEnabled: false,
+            lighting: {
+              directShadowsEnabled: false,
+              date: "Sun Jun 23 2019 19:19:18 GMT+0200 (Central European Summer Time)"
+            }
+          },
+          constraints: {
+            altitude: {
+              min: 5000000,
+              max: 500000000
+            }
+          },
+          popup: {
+            dockEnabled: true,
+            dockOptions: {
+              position: "top-right",
+              breakpoint: false,
+              buttonEnabled: false
+            },
+            collapseEnabled: false
+          },
+          highlightOptions: {
+            color: [255, 255, 255],
+            haloOpacity: 0.5
+          }
+        });
+
+        let exaggerated = true;
+
+        document
+          .getElementById("exaggerate")
+          .addEventListener("click", (event) => {
+            if (exaggerated) {
+              map.ground = "world-elevation";
+              event.target.innerHTML = "Enable exaggeration";
+              exaggerated = false;
+            } else {
+              map.ground = {
+                layers: [elevationLayer]
+              };
+              event.target.innerHTML = "Disable exaggeration";
+              exaggerated = true;
+            }
+          });
+
+        const homeBtn = new Home({
+          view: view
+        });
+
+        // Add the home button to the top left corner of the view
+        view.ui.add(homeBtn, "top-left");
+
+      });
+    </script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      body {
+        background: radial-gradient(#12bff2, #0269a1);
+        //background: radial-gradient(#12bff2, #000000);
+      }
+
+      #viewDiv canvas {
+        filter: saturate(1.2) drop-shadow(0 0 20px white);
+      }
+
+      .buttons {
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+
+      .esri-button {
+        display: inline;
+        max-width: 200px;
+        background: #eecfaf;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+    <div class="buttons">
+      <button id="exaggerate" class="esri-button">Disable exaggeration</button>
+    </div>
+  </body>
+</html>
