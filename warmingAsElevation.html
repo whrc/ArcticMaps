@@ -25,6 +25,7 @@
         "esri/layers/VectorTileLayer",
         "esri/Basemap",
         "esri/layers/TileLayer",
+        "esri/widgets/Legend",
         "esri/widgets/Home"
       ], (
         Map,
@@ -34,6 +35,7 @@
         VectorTileLayer,
         Basemap,
         TileLayer,
+        Legend,
         Home
       ) => {
         //////////////////////////////////////////////
@@ -54,7 +56,7 @@
           // The load() method is called when the layer is added to the map
           // prior to it being rendered in the view.
           load: function () {
-            // TopoBathy3D contains elevation values for both land and ocean ground
+            // elevation values
             this._elevation = new ElevationLayer({
               url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/diff_Layer_2060_elevation/ImageServer"
             });
@@ -103,21 +105,26 @@
           ]
         });
 
+
+
         const elevationLayer = new ExaggeratedElevationLayer();
 
           // Add the countries vector tile layer
         const vtlLayer = new VectorTileLayer({
           url: "https://vectortileservices.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/countries_w_no_attributes/VectorTileServer"
           });
-
+         // Add the diff 2060 tile layer
+ 				const diffLayer2060 = new TileLayer({
+              url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/diff_Layer_2060_color_3/MapServer"
+            });
         // Add the exaggerated elevation layer to the map's ground
         // in place of the default world elevation service
         const map = new Map({
-          basemap: basemap,
+          //basemap: basemap,
           ground: {
             layers: [elevationLayer]
           },
-          layers: [vtlLayer],
+          layers: [diffLayer2060, vtlLayer],
         });
 
         const view = new SceneView({
@@ -182,14 +189,22 @@
             }
           });
 
+
+
+
+
+          view.ui.add("legend", "top-right");
+
+
         const homeBtn = new Home({
           view: view
         });
 
-        // Add the home button to the top left corner of the view
-        view.ui.add(homeBtn, "top-left");
+          view.ui.add(homeBtn, "top-left");
 
       });
+
+
     </script>
     <style>
       html,
@@ -223,10 +238,28 @@
         max-width: 200px;
         background: #eecfaf;
       }
+
+      #legend {
+        background-color: #000000;
+        padding: 1em;
+      }
+
+      .legend-title {
+        margin-top: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: white;
+      }
+
     </style>
   </head>
   <body>
-    <div id="viewDiv"></div>
+    <div id="viewDiv">
+      <div id="legend">
+      <h2><p class="legend-title"> Disproportionate Warming of the Arctic</p></h2>
+        <img width=500 src="https://gfiske.github.io/ArcticMaps/RCP8_3_Globes_legend_for_web.png" alt="temperature legend">
+      </div>
+    </div>
     <div class="buttons">
       <button id="exaggerate" class="esri-button">Disable exaggeration</button>
     </div>
