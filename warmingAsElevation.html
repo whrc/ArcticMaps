@@ -181,13 +181,13 @@
           .addEventListener("click", (event) => {
             if (exaggerated) {
               map.ground = "world-elevation";
-              event.target.innerHTML = "Enable exaggeration";
+              event.target.innerHTML = "Enable Scaling";
               exaggerated = false;
             } else {
               map.ground = {
                 layers: [elevationLayer]
               };
-              event.target.innerHTML = "Disable exaggeration";
+              event.target.innerHTML = "Disable Scaling";
               exaggerated = true;
             }
           });
@@ -266,7 +266,7 @@
       </div>
     </div>
     <div class="buttons">
-      <button id="exaggerate" class="esri-button">Disable exaggeration</button>
+      <button id="exaggerate" class="esri-button">Disable Scaling</button>
     </div>
   </body>
 </html>
