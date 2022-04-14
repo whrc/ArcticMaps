@@ -14,7 +14,7 @@
       href="https://js.arcgis.com/4.22/esri/themes/dark/main.css"
     />
 
-    <script src="https://js.arcgis.com/4.22/"></script>
+    <script src="https://js.arcgis.com/4.23/"></script>
 
     <script>
       require([
@@ -26,7 +26,8 @@
         "esri/Basemap",
         "esri/layers/TileLayer",
         "esri/widgets/Legend",
-        "esri/widgets/Home"
+        "esri/widgets/Home",
+        "esri/views/3d/environment/VirtualLighting"
       ], (
         Map,
         SceneView,
@@ -36,7 +37,8 @@
         Basemap,
         TileLayer,
         Legend,
-        Home
+        Home,
+        VirtualLighting
       ) => {
         //////////////////////////////////////////////
         //
@@ -146,8 +148,9 @@
             starsEnabled: true,
             atmosphereEnabled: false,
             lighting: {
-              directShadowsEnabled: false,
-              date: "Sun Jun 23 2019 19:19:18 GMT+0200 (Central European Summer Time)"
+              //directShadowsEnabled: false,
+              //date: "Sun Jun 23 2019 19:19:18 GMT+0200 (Central European Summer Time)"
+              type: "virtual"
             }
           },
           constraints: {
@@ -190,6 +193,11 @@
           });
 
           view.ui.add("legend", "bottom-right");
+
+          view.environment.lighting = {
+            type: "virtual",
+            directShadowsEnabled: true    // autocasts as new VirtualLighting({ directShadowsEnabled: true })
+            }
 
 
         const homeBtn = new Home({
