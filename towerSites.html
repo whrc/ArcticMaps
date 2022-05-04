@@ -37,7 +37,8 @@
         // or a proxy is required.
         esriConfig.apiKey = "AAPKc758424f9fd4486d9134df747a57c2fdrq8MzZy9VHqbfPzXNut5SvvoABhJdzImRZOvLbw3qin0_dz9IeNBEOADq9Up7hyG";
         const url =
-          "https://developers.arcgis.com/javascript/latest/sample-code/layers-csv/live/earthquakes.csv";
+          //"https://developers.arcgis.com/javascript/latest/sample-code/layers-csv/live/earthquakes.csv";
+          "https://gfiske.github.io/ArcticMaps/tower_sites_annual_co2_CH4.csv";
 
         // Paste the url into a browser's address bar to download and view the attributes
         // in the CSV file. These attributes include:
@@ -47,8 +48,8 @@
         // * time - the time of the event
 
         const template = {
-          title: "Earthquake Info",
-          content: "Magnitude {mag} {type} hit {place} on {time}."
+          title: "Tower Information",
+          content: "<p><b>Name:</b> {Site_Name}</p>" + "<p><b>Biome:</b> {Biome}</p>" + "<p><b>Data Access:</b> {Data}</p>"
         };
 
         const csvLayer = new CSVLayer({
@@ -101,8 +102,8 @@
           viewingMode: "global",
           camera: {
             position: [
-              -63.77153412,
-              20.75790715,
+              -90,
+              90,
               25512548.00000
             ],
             heading: 0.00,
