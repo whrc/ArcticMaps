@@ -37,19 +37,12 @@
         // or a proxy is required.
         esriConfig.apiKey = "AAPKc758424f9fd4486d9134df747a57c2fdrq8MzZy9VHqbfPzXNut5SvvoABhJdzImRZOvLbw3qin0_dz9IeNBEOADq9Up7hyG";
         const url =
-          //"https://developers.arcgis.com/javascript/latest/sample-code/layers-csv/live/earthquakes.csv";
           "https://gfiske.github.io/ArcticMaps/tower_sites_annual_co2_CH4.csv";
 
-        // Paste the url into a browser's address bar to download and view the attributes
-        // in the CSV file. These attributes include:
-        // * mag - magnitude
-        // * type - earthquake or other event such as nuclear test
-        // * place - location of the event
-        // * time - the time of the event
 
         const template = {
           title: "Tower Information",
-          content: "<p><b>Name:</b> {Site_Name}</p>" + "<p><b>Site_ID:</b> {Site_ID}</p>" + "<p><b>Contact:</b> {Contact}</p>" + "<p><b>Biome:</b> {Biome}</p>" + "<p><b>Data Access:</b> <link>{Data}</link></p>"
+          content: "<p><b>Name:</b> {Site_Name}</p>" + "<p><b>Site_ID:</b> {Site_ID}</p>" + "<p><b>Contact:</b> {Contact}</p>" + "<p><b>Biome:</b> {Biome}</p>" + "<p><b>Data Access:</b> <a href={Data}></a></p>"
         };
 
         const csvLayer = new CSVLayer({
@@ -89,6 +82,8 @@
               new TileLayer({
                 url: "https://tiles.arcgis.com/tiles/nGt4QxSblgDfeJn9/arcgis/rest/services/VintageShadedRelief/MapServer"
                 //url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/diff_Layer_2060_color_3/MapServer" // an example of a custom tile layer
+                //portalItem:{id: "10df2279f9684e4a9f6a7f08febac2a9" // world imagery
+              //}
               })
             ]
           }),
