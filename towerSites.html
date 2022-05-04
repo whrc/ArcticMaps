@@ -24,17 +24,17 @@
 
     <script>
       require([
+        "esri/layers/WebTileLayer",
         "esri/config",
         "esri/Map",
         "esri/layers/CSVLayer",
         "esri/views/SceneView",
         "esri/layers/TileLayer",
         "esri/Basemap",
+        "esri/widgets/BasemapToggle",
         "esri/widgets/Home",
         "esri/views/3d/environment/VirtualLighting"
-      ], function (esriConfig,Map, CSVLayer, SceneView, TileLayer, Basemap, Home, VirtualLighting) {
-        // If CSV files are not on the same domain as your website, a CORS enabled server
-        // or a proxy is required.
+      ], function (WebTileLayer, esriConfig, Map, CSVLayer, SceneView, TileLayer, Basemap, BasemapToggle, Home, VirtualLighting) {
         esriConfig.apiKey = "AAPKc758424f9fd4486d9134df747a57c2fdrq8MzZy9VHqbfPzXNut5SvvoABhJdzImRZOvLbw3qin0_dz9IeNBEOADq9Up7hyG";
         const url =
           "https://gfiske.github.io/ArcticMaps/tower_sites_annual_co2_CH4.csv";
@@ -75,17 +75,38 @@
           }
         };
 
+        // Create a WebTileLayer with a third-party cached service
+               const mapBaseLayer = new WebTileLayer({
+                 urlTemplate: "https://stamen-tiles-{subDomain}.a.ssl.fastly.net/terrain/{level}/{col}/{row}.png",
+                 subDomains: ["a", "b", "c", "d"],
+                 copyright:
+                   `Map tiles by <a href="http://stamen.com/">Stamen Design</a>,
+                    under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
+                    Data by <a href="http://openstreetmap.org/">OpenStreetMap</a>,
+                    under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.`
+               });
+               // Create a Basemap with the WebTileLayer. The thumbnailUrl will be used for
+               // the image in the BasemapToggle widget.
+               const stamen = new Basemap({
+                 baseLayers: [mapBaseLayer],
+                 title: "Terrain",
+                 id: "terrain",
+                 thumbnailUrl: "https://stamen-tiles.a.ssl.fastly.net/terrain/10/177/409.png"
+               });
+
 
         const map = new Map({
-          basemap: new Basemap({
-            baseLayers: [
-              new TileLayer({
-                url: "https://tiles.arcgis.com/tiles/nGt4QxSblgDfeJn9/arcgis/rest/services/VintageShadedRelief/MapServer"
-                //url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/diff_Layer_2060_color_3/MapServer" // an example of a custom tile layer
-                //portalItem:{id: "c8cf26d7acab4e45afcd5e20080983c1"}
-              })
-            ]
-          }),
+          basemap: stamen,
+          ground: "world-elevation",
+          // basemap: new Basemap({
+          //   baseLayers: [
+          //     new TileLayer({
+          //       url: "https://tiles.arcgis.com/tiles/nGt4QxSblgDfeJn9/arcgis/rest/services/VintageShadedRelief/MapServer"
+          //       //url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/diff_Layer_2060_color_3/MapServer" // an example of a custom tile layer
+          //       //portalItem:{id: "c8cf26d7acab4e45afcd5e20080983c1"}
+          //     })
+          //   ]
+          // }),
           layers: [csvLayer]
         });
 
@@ -133,6 +154,19 @@
         });
 
           view.ui.add(homeBtn, "top-left");
+          view.when(() => {
+          // Add a basemap toggle widget to toggle between basemaps
+          const toggle = new BasemapToggle({
+            visibleElements: {
+              title: true
+            },
+            view: view,
+            nextBasemap: "satellite"
+          });
+
+          // Add widget to the top right corner of the view
+          view.ui.add(toggle, "top-right");
+        });
 
       });
     </script>
