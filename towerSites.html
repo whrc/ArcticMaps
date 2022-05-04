@@ -61,14 +61,14 @@
               {
                 type: "icon", // autocasts as new IconSymbol3DLayer()
                 resource: { primitive: "circle" },
-                material: { color: [51, 51, 255, 0.6] },
-                size: 15
+                material: { color: [0, 0, 0, 0.8] },
+                size: 10
               },
               {
                 type: "icon", // autocasts as new IconSymbol3DLayer()
                 resource: { primitive: "circle" },
-                material: { color: [51, 51, 255, 0] },
-                outline: { color: [51, 51, 255, 0.6], size: 1 },
+                material: { color: [0, 0, 0, 0.1] },
+                outline: { color: [0, 0, 0, 0.8], size: 0.6 },
                 size: 20
               }
             ]
@@ -98,15 +98,6 @@
         const map = new Map({
           basemap: stamen,
           ground: "world-elevation",
-          // basemap: new Basemap({
-          //   baseLayers: [
-          //     new TileLayer({
-          //       url: "https://tiles.arcgis.com/tiles/nGt4QxSblgDfeJn9/arcgis/rest/services/VintageShadedRelief/MapServer"
-          //       //url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/diff_Layer_2060_color_3/MapServer" // an example of a custom tile layer
-          //       //portalItem:{id: "c8cf26d7acab4e45afcd5e20080983c1"}
-          //     })
-          //   ]
-          // }),
           layers: [csvLayer]
         });
 
