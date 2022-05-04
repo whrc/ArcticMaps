@@ -1,0 +1,192 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Tower Sites
+    </title>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.23/esri/themes/dark/main.css"
+    />
+
+    <script src="https://js.arcgis.com/4.23/"></script>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/layers/FeatureLayer",
+        "esri/views/SceneView",
+        "esri/layers/TileLayer",
+        "esri/layers/ElevationLayer",
+        "esri/Basemap",
+        "esri/widgets/Legend",
+        "esri/widgets/Home",
+        "esri/views/3d/environment/VirtualLighting"
+      ], (
+        Map,
+        FeatureLayer,
+        SceneView,
+        TileLayer,
+        ElevationLayer,
+        Basemap,
+        Legend,
+        Home,
+        VirtualLighting
+      ) => {
+
+
+        const basemap = new Basemap({
+            baseLayers: [
+               new TileLayer({
+                 url: "https://wtb.maptiles.arcgis.com/arcgis/rest/services/World_Topo_Base/MapServer"
+               })
+             ]
+         });
+
+         const map = new Map({
+           ground: {
+             layers: [ new ElevationLayer({
+               url: "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"
+             })]
+           },
+           basemap: basemap
+         });
+        const view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          alphaCompositingEnabled: true,
+          qualityProfile: "high",
+          viewingMode: "global",
+          camera: {
+            position: [-55.039, 14.948, 30000000],
+            heading: 2.03,
+            tilt: 0.13
+          },
+          environment: {
+            background: {
+              type: "color",
+              //color: [255, 252, 244, 0]
+              color: '#000000'
+            },
+            highlightOptions: {
+              fillOpacity: 0,
+              color: "#ffffff"
+            },
+            starsEnabled: true,
+            atmosphereEnabled: false,
+            lighting: {
+              //directShadowsEnabled: false,
+              //date: "Sun Jun 23 2019 19:19:18 GMT+0200 (Central European Summer Time)"
+              type: "virtual"
+            }
+          },
+          constraints: {
+            altitude: {
+              min: 5000000,
+              max: 500000000
+            }
+          },
+          popup: {
+            dockEnabled: true,
+            dockOptions: {
+              position: "top-right",
+              breakpoint: false,
+              buttonEnabled: false
+            },
+            collapseEnabled: false
+          },
+          highlightOptions: {
+            color: [255, 255, 255],
+            haloOpacity: 0.5
+          }
+        });
+
+        let exaggerated = true;
+
+        document
+          view.ui.add("legend", "bottom-right");
+
+          view.environment.lighting = {
+            type: "virtual",
+            directShadowsEnabled: true    // autocasts as new VirtualLighting({ directShadowsEnabled: true })
+            }
+
+
+        const featureLayer = new FeatureLayer({
+              url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/existing_tower_sites/FeatureServer"
+              });
+
+        map.add(featureLayer);
+
+        const homeBtn = new Home({
+          view: view
+        });
+
+          view.ui.add(homeBtn, "top-left");
+
+      });
+
+
+    </script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      body {
+        //background: radial-gradient(#12bff2, #0269a1);
+        background: radial-gradient(#12bff2, #000000);
+      }
+
+      #viewDiv canvas {
+        filter: saturate(1.2) drop-shadow(0 0 20px white);
+      }
+
+      .buttons {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+
+      .esri-button {
+        display: inline;
+        max-width: 200px;
+        background: #000000;
+        color: white;
+      }
+
+      #legend {
+        background-color: #000000;
+        padding: 1em;
+      }
+
+      .legend-title {
+        margin-top: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: white;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="viewDiv">
+      <div id="legend">
+      <p class="legend-title"> Disproportionate Warming of the Arctic</p>
+        <img width=300 src="https://gfiske.github.io/ArcticMaps/RCP8_3_Globes_legend_for_web.png" alt="temperature legend">
+      </div>
+    </div>
+  </body>
+</html>
