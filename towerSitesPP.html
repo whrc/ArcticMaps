@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tower Sites</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.23/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.23/"></script>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        background-color: aliceblue;
+      }
+      .esri-legend {
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+    </style>
+
+
+    <script>
+      require([
+        "esri/config",
+        "esri/Map",
+        "esri/layers/CSVLayer",
+        "esri/views/SceneView",
+        "esri/layers/TileLayer",
+        "esri/layers/TileLayer",
+        "esri/Basemap",
+        "esri/widgets/Home",
+        "esri/views/3d/environment/VirtualLighting"
+      ], function (esriConfig, Map, CSVLayer, SceneView, TileLayer, VectorTileLayer, Basemap, Home, VirtualLighting) {
+        esriConfig.apiKey = "AAPKc758424f9fd4486d9134df747a57c2fdrq8MzZy9VHqbfPzXNut5SvvoABhJdzImRZOvLbw3qin0_dz9IeNBEOADq9Up7hyG";
+        const url =
+          "https://gfiske.github.io/ArcticMaps/tower_sites_annual_co2_CH4.csv";
+
+        const template = {
+          title: "Tower Information",
+          content: "<p><b>Name:</b> {Site_Name}</p>" + "<p><b>Site_ID:</b> {Site_ID}</p>" + "<p><b>Contact:</b> {Contact}</p>" + "<p><b>Biome:</b> {Biome}</p>" + "<p><b>Data Access:</b> <a href={Data}>{Data}</a></p>"
+        };
+
+        const csvLayer = new CSVLayer({
+          url: url,
+          copyright: "USGS Earthquakes",
+          popupTemplate: template
+        });
+
+        csvLayer.renderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          symbol: {
+            type: "point-3d", // autocasts as new PointSymbol3D()
+            // for this symbol we use 2 symbol layers, one for the outer circle
+            // and one for the inner circle
+            symbolLayers: [
+              {
+                type: "icon", // autocasts as new IconSymbol3DLayer()
+                resource: { primitive: "circle" },
+                material: { color: [31, 38, 36, 1.0] },
+                size: 8
+              },
+              {
+                type: "icon", // autocasts as new IconSymbol3DLayer()
+                resource: { primitive: "circle" },
+                material: { color: [31, 38, 36, 0.1] },
+                outline: { color: [31, 38, 36, 1], size: 0.6 },
+                size: 20
+              }
+            ]
+          }
+        };
+
+
+        // Multiply blend mode emphasizes the darkest parts of overlapping layers
+        // by multiplying colors of the top layer and the background layer.
+        // This blend mode is useful to have the hillshades to show through the top layer.
+        const map = new Map({
+          layers: [csvLayer],
+          basemap: {
+            baseLayers:[
+              new TileLayer({
+                portalItem: {
+                  id: "1b243539f4514b6ba35e7d995890db1d" // world hillshade
+                }
+              }),
+              new VectorTileLayer({
+                portalItem: {
+                  id: "06b93ca75bcc45b9a69fb5d262aaad8c" // community style vector tiles
+                },
+                blendMode: "multiply"
+              })
+            ]
+          }
+        });
+
+
+        const view = new SceneView({
+          container: "viewDiv",
+          map: map,
+          viewingMode: "global",
+          camera: {
+            position: [
+              -135,
+              65,
+              25512548.00000
+            ],
+            heading: 0.00,
+            tilt: 0.10
+          },
+
+          constraints: {
+            altitude: {
+              min: 100000
+            }
+          },
+          qualityProfile: "high",
+          alphaCompositingEnabled: true,
+          highlightOptions: {
+            fillOpacity: 0,
+            color: "#ffffff"
+          },
+          environment: {
+            background: {
+              type: "color",
+              color: [255, 255, 255, 0.4]
+            },
+            atmosphereEnabled: false,
+            starsEnabled: false,
+            lighting: {
+              type: "virtual"
+            }
+          }
+        });
+
+        const homeBtn = new Home({
+          view: view
+        });
+
+          view.ui.add(homeBtn, "top-left");
+          view.when(() => {
+
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
