@@ -61,14 +61,14 @@
               {
                 type: "icon", // autocasts as new IconSymbol3DLayer()
                 resource: { primitive: "circle" },
-                material: { color: [0, 0, 0, 0.8] },
-                size: 10
+                material: { color: [31, 38, 36, 1.0] },
+                size: 8
               },
               {
                 type: "icon", // autocasts as new IconSymbol3DLayer()
                 resource: { primitive: "circle" },
-                material: { color: [0, 0, 0, 0.1] },
-                outline: { color: [0, 0, 0, 0.8], size: 0.6 },
+                material: { color: [31, 38, 36, 0.1] },
+                outline: { color: [31, 38, 36, 1], size: 0.6 },
                 size: 20
               }
             ]
@@ -123,10 +123,10 @@
           },
           qualityProfile: "high",
           alphaCompositingEnabled: true,
-          //highlightOptions: {
-          //  fillOpacity: 0,
-          //  color: "#ffffff"
-          //},
+          highlightOptions: {
+            fillOpacity: 0,
+            color: "#ffffff"
+          },
           environment: {
             background: {
               type: "color",
@@ -152,7 +152,8 @@
               title: true
             },
             view: view,
-            nextBasemap: "satellite"
+            nextBasemap: "satellite",
+            //nextBasemap: "topo-vector"
           });
 
           // Add widget to the top right corner of the view
