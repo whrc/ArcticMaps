@@ -5,9 +5,7 @@
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>
-      Tower Sites PP Colors
-    </title>
+    <title>Tower Sites PP Colors</title>
 
     <style>
       html,
@@ -31,10 +29,10 @@
         "esri/Map",
         "esri/layers/CSVLayer",
         "esri/views/MapView",
+        "esri/layers/FeatureLayer",
         "esri/layers/VectorTileLayer",
         "esri/layers/TileLayer"
-      ], (Map, CSVLayer, MapView, VectorTileLayer, TileLayer) => {
-
+      ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer) => {
         const template = {
           title: "Tower Information",
           content:
@@ -45,7 +43,6 @@
             "<p><b>Data Access:</b> <a href={Data}>{Data}</a></p>"
         };
 
-
         const csvRenderer = {
           type: "simple", // autocasts as new SimpleRenderer()
           style: "circle",
@@ -53,11 +50,14 @@
             type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
             size: 10,
             color: "#2253ff",
-            outline: { style: "dash", join: "round", width: 1.0, color: [31, 38, 36, 0.5] }
+            outline: {
+              style: "dash",
+              join: "round",
+              width: 1.0,
+              color: [31, 38, 36, 0.5]
+            }
           }
         };
-
-
 
         const csvLayer = new CSVLayer({
           url: "https://gfiske.github.io/ArcticMaps/tower_sites_annual_co2_CH4.csv",
@@ -66,9 +66,27 @@
           renderer: csvRenderer
         });
 
-        // Multiply blend mode emphasizes the darkest parts of overlapping layers
-        // by multiplying colors of the top layer and the background layer.
-        // This blend mode is useful to have the hillshades to show through the top layer.
+        const permaRenderer = {
+          type: "simple",  // autocasts as new SimpleRenderer()
+          maxScale: 72000,
+          symbol: {
+            type: "simple-fill",  // autocasts as new SimpleMarkerSymbol()
+            //size: 6,
+            color: [0, 191, 184, 0.5],
+            outline: {  // autocasts as new SimpleLineSymbol()
+              width: 0.5,
+              color: "white"
+            }
+          }
+        };
+
+
+        const permaFrost = new FeatureLayer({
+          url:
+            "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/PFI_thresh0_poly_no_ice/FeatureServer",
+          renderer: permaRenderer
+        });
+        permaFrost.maxScale = 9244648.868618;
         const map = new Map({
           basemap: {
             baseLayers: [
@@ -85,9 +103,8 @@
               })
             ]
           },
-          layers: [csvLayer]
+          layers: [permaFrost, csvLayer]
         });
-        //map.add(csvLayer); // adds the layer to the map
 
         const view = new MapView({
           container: "viewDiv",
