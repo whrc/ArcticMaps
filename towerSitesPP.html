@@ -16,6 +16,19 @@
         height: 100%;
         width: 100%;
       }
+      #topbar {
+        padding: 10px;
+        width: 190px;
+      }
+       .style-button {
+        margin: 3px;
+      }
+      button:disabled {
+        opacity: 0.4;
+        -moz-opacity: 0.4;
+        -webkit-opacity: 0.4;
+        cursor: default;
+      }
     </style>
 
     <link
@@ -65,30 +78,37 @@
           popupTemplate: template,
           copyright: "sites",
           renderer: csvRenderer,
-          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)" // bloom(0.8, 0.5px, 0.1)"
         });
 
         const permaRenderer = {
-          type: "simple",  // autocasts as new SimpleRenderer()
+          type: "simple", // autocasts as new SimpleRenderer()
           maxScale: 72000,
           symbol: {
-            type: "simple-fill",  // autocasts as new SimpleMarkerSymbol()
+            type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
             //size: 6,
             color: [0, 191, 184, 0.5],
-            outline: {  // autocasts as new SimpleLineSymbol()
+            outline: {
+              // autocasts as new SimpleLineSymbol()
               width: 0.5,
               color: "white"
             }
           }
         };
 
-
-        const permaFrost = new FeatureLayer({
-          url:
-            "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/PFI_thresh0_poly_no_ice/FeatureServer",
+        const permaFrost2020 = new FeatureLayer({
+          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/PFI_thresh0_poly_no_ice/FeatureServer",
           renderer: permaRenderer
         });
-        permaFrost.maxScale = 9244648.868618;
+        permaFrost2020.maxScale = 9244648.868618;
+
+        const permaFrost2070 = new FeatureLayer({
+          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/RCP85_2070/FeatureServer",
+          renderer: permaRenderer,
+          visible: false
+        });
+        permaFrost2070.maxScale = 9244648.868618;
+
         const map = new Map({
           basemap: {
             baseLayers: [
@@ -105,7 +125,7 @@
               })
             ]
           },
-          layers: [permaFrost, csvLayer]
+          layers: [permaFrost2070, permaFrost2020, csvLayer]
         });
 
         const view = new MapView({
@@ -115,13 +135,53 @@
           center: [-155, 65.733],
           highlightOptions: {
             fillOpacity: 0,
-            color: "#FFFFFF"
-          },
+            color: [243, 187, 31]
+          }
         });
+
+        // UI setup
+        // following this example: https://developers.arcgis.com/javascript/latest/sample-code/featureeffect-drop-shadow/
+        view.ui.add("topbar", "top-right");
+        const permaFrost2020Button = document.getElementById("permaFrost2020");
+        const permaFrost2070Button = document.getElementById("permaFrost2070");
+
+        permaFrost2020Button.addEventListener("click", () => {
+          setLayerVisibility(true, false);
+        });
+
+        permaFrost2070Button.addEventListener("click", () => {
+          setLayerVisibility(false, true);
+        });
+
+        function setLayerVisibility(permaFrost2020Vis, permaFrost2070Vis) {
+          permaFrost2020.visible = permaFrost2020Vis;
+          permaFrost2020Button.disabled = permaFrost2020Vis;
+          permaFrost2070.visible = permaFrost2070Vis;
+          permaFrost2070Button.disabled = permaFrost2070Vis;
+        }
       });
     </script>
   </head>
   <body>
     <div id="viewDiv"></div>
+    <div id="topbar" class="esri-widget">
+      <h2 class="esri-heading"><center>Permafrost</center></h2>
+      <button
+        class="esri-button style-button"
+        id="permaFrost2020"
+        type="button"
+      >
+        Present Day
+      </button>
+      <button
+        class="esri-button style-button"
+        id="permaFrost2070"
+        type="button"
+
+      >
+        2070
+      </button>
+
+    </div>
   </body>
 </html>
