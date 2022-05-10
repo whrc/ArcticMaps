@@ -48,13 +48,14 @@
           style: "circle",
           symbol: {
             type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-            size: 10,
+            size: 11,
             color: "#2253ff",
             outline: {
-              style: "dash",
+              //style: "dash",
               join: "round",
               width: 1.0,
-              color: [31, 38, 36, 0.5]
+              //color: [31, 38, 36, 0.5]
+              color: [255, 255, 255, 1]
             }
           }
         };
@@ -63,7 +64,8 @@
           url: "https://gfiske.github.io/ArcticMaps/tower_sites_annual_co2_CH4.csv",
           popupTemplate: template,
           copyright: "sites",
-          renderer: csvRenderer
+          renderer: csvRenderer,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
 
         const permaRenderer = {
@@ -110,7 +112,11 @@
           container: "viewDiv",
           map: map,
           zoom: 5,
-          center: [-155, 65.733]
+          center: [-155, 65.733],
+          highlightOptions: {
+            fillOpacity: 0,
+            color: "#FFFFFF"
+          },
         });
       });
     </script>
