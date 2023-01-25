@@ -42,12 +42,13 @@
 
         const template = {
           title: "Tower Information",
-          content: "<p><b>Name:</b> {Site_Name}</p>" + "<p><b>Site_ID:</b> {Site_ID}</p>" + "<p><b>Contact:</b> {Contact}</p>" + "<p><b>Biome:</b> {Biome}</p>" + "<p><b>Data Access:</b> <a href={Data}>{Data}</a></p>"
+          content: "<p><b>Name:</b> {Site_Name}</p>" + "<p><b>Site_Id:</b> {Site_ID}</p>" + "<p><b>Contact:</b> {contact_name}</p>" + "<p><b>Biome:</b> {Biome}</p>" + "<p><b>Data Access:</b> <a href={Data}>{Data}</a></p>"
         };
 
+        // Annual Coverage
         const csvLayer = new CSVLayer({
           url: url,
-          definitionExpression: "Country = 'Russia'",
+          definitionExpression: "Annual_cover = 'yes'",
           copyright: "Permafrost Pathways",
           popupTemplate: template
         });
@@ -62,14 +63,46 @@
               {
                 type: "icon", // autocasts as new IconSymbol3DLayer()
                 resource: { primitive: "circle" },
-                material: { color: [31, 38, 36, 1.0] },
+                material: { color: [34, 83, 255, 1.0] },
                 size: 8
               },
               {
                 type: "icon", // autocasts as new IconSymbol3DLayer()
                 resource: { primitive: "circle" },
-                material: { color: [31, 38, 36, 0.1] },
-                outline: { color: [31, 38, 36, 1], size: 0.6 },
+                material: { color: [34, 83, 255, 0.1] },
+                outline: { color: [34, 83, 255, 1], size: 0.6 },
+                size: 20
+              }
+            ]
+          }
+        };
+
+        // Supported
+        const csvLayer2 = new CSVLayer({
+          url: url,
+          definitionExpression: "Supported = 'yes'",
+          copyright: "Permafrost Pathways",
+          popupTemplate: template
+        });
+
+        csvLayer2.renderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          symbol: {
+            type: "point-3d", // autocasts as new PointSymbol3D()
+            // for this symbol we use 2 symbol layers, one for the outer circle
+            // and one for the inner circle
+            symbolLayers: [
+              {
+                type: "icon", // autocasts as new IconSymbol3DLayer()
+                resource: { primitive: "circle" },
+                material: { color: [0, 0, 0, 1.0] },
+                size: 8
+              },
+              {
+                type: "icon", // autocasts as new IconSymbol3DLayer()
+                resource: { primitive: "circle" },
+                material: { color: [244, 188, 37, 0.9] },
+                outline: { color: [244, 188, 37, 1], size: 0.6 },
                 size: 20
               }
             ]
@@ -99,7 +132,7 @@
         const map = new Map({
           basemap: stamen,
           ground: "world-elevation",
-          layers: [csvLayer]
+          layers: [csvLayer2, csvLayer]
         });
 
         const view = new SceneView({
@@ -111,7 +144,7 @@
             position: [
               -135,
               65,
-              25512548.00000
+              15512548.00000
             ],
             heading: 0.00,
             tilt: 0.10
