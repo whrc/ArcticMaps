@@ -50,8 +50,8 @@
           title: "Tower Information",
           content:
             "<p><b>Name:</b> {Site_Name}</p>" +
-            "<p><b>Site_ID:</b> {Site_ID}</p>" +
-            "<p><b>Contact:</b> {Contact}</p>" +
+            "<p><b>Site_ID:</b> {Site_Id}</p>" +
+            "<p><b>Contact:</b> {contact_name}</p>" +
             "<p><b>Biome:</b> {Biome}</p>" +
             "<p><b>Data Access:</b> <a href={Data}>{Data}</a></p>"
         };
@@ -73,12 +73,42 @@
           }
         };
 
+        const csvRenderer2 = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          style: "circle",
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            size: 11,
+            color: "#f3bb1f",
+            outline: {
+              //style: "dash",
+              join: "round",
+              width: 1.0,
+              //color: [31, 38, 36, 0.5]
+              color: [255, 255, 255, 1]
+            }
+          }
+        };
+
+
+        // Annual Coverage
         const csvLayer = new CSVLayer({
-          url: "https://gfiske.github.io/ArcticMaps/tower_sites_annual_co2_CH4.csv",
+          url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
+          definitionExpression: "Annual_cover = 'yes'",
           popupTemplate: template,
           copyright: "sites",
           renderer: csvRenderer,
-          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)" // bloom(0.8, 0.5px, 0.1)"
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+        });
+
+        // Supported
+        const csvLayer2 = new CSVLayer({
+          url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
+          definitionExpression: "Supported = 'yes'",
+          popupTemplate: template,
+          copyright: "sites",
+          renderer: csvRenderer2,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
 
         const permaRenderer = {
@@ -125,14 +155,14 @@
               })
             ]
           },
-          layers: [permaFrost2070, permaFrost2020, csvLayer]
+          layers: [permaFrost2070, permaFrost2020, csvLayer, csvLayer2]
         });
 
         const view = new MapView({
           container: "viewDiv",
           map: map,
-          zoom: 5,
-          center: [-155, 65.733],
+          zoom: 3,
+          center: [-50, 40],
           highlightOptions: {
             fillOpacity: 0,
             color: [243, 187, 31]
