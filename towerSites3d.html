@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Tower Sites</title>
+    <title>Tower Sites 3d</title>
     <link rel="stylesheet" href="https://js.arcgis.com/4.23/esri/themes/light/main.css" />
     <script src="https://js.arcgis.com/4.23/"></script>
 
@@ -48,7 +48,7 @@
         // Annual Coverage
         const csvLayer = new CSVLayer({
           url: url,
-          definitionExpression: "Annual_cover = 'yes' And Activity = 'active'",
+          definitionExpression: "Annual_cover = 'yes' And Activity = 'active' And Supported = ''",
           copyright: "Permafrost Pathways",
           popupTemplate: template
         });
@@ -69,8 +69,8 @@
               {
                 type: "icon", // autocasts as new IconSymbol3DLayer()
                 resource: { primitive: "circle" },
-                material: { color: [34, 83, 255, 0.1] },
-                outline: { color: [34, 83, 255, 1], size: 0.6 },
+                material: { color: [34, 83, 255, 0.6] },
+                outline: { color: [255, 255, 255, 1], size: 0.6 },
                 size: 20
               }
             ]
@@ -95,22 +95,22 @@
               {
                 type: "icon", // autocasts as new IconSymbol3DLayer()
                 resource: { primitive: "circle" },
-                material: { color: [244, 188, 37, 0.4] },
-                outline: { color: [244, 188, 37, 1], size: 0.6 },
+                material: { color: [244, 188, 37, 0.6] },
+                outline: { color: [255, 255, 255, 1], size: 0.6 },
                 size: 20
               },
-              {
-                type: "icon", // autocasts as new IconSymbol3DLayer()
-                resource: { primitive: "circle" },
-                material: { color: [244, 188, 37, 1.0] },
-                size: 8
-              },
-              {
-                type: "icon", // autocasts as new IconSymbol3DLayer()
-                resource: { primitive: "circle" },
-                material: { color: [0, 0, 0, 0.5] },
-                size: 9
-              }
+              //{
+              //  type: "icon", // autocasts as new IconSymbol3DLayer()
+              //  resource: { primitive: "circle" },
+              //  material: { color: [244, 188, 37, 1.0] },
+              //  size: 8
+              //},
+              //{
+              //  type: "icon", // autocasts as new IconSymbol3DLayer()
+              //  resource: { primitive: "circle" },
+              //  material: { color: [0, 0, 0, 0.5] },
+              //  size: 9
+              //}
             ]
           }
         };
@@ -119,7 +119,7 @@
         // all network
         const csvLayer3 = new CSVLayer({
           url: url,
-          definitionExpression: "Activity = 'active'",
+          definitionExpression: "Annual_cover = '' And Activity = 'active'",
           copyright: "Permafrost Pathways",
           popupTemplate: template
         });

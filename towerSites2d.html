@@ -5,7 +5,7 @@
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>Tower Sites PP Colors</title>
+    <title>Tower Sites 2d</title>
 
     <style>
       html,
@@ -90,11 +90,29 @@
           }
         };
 
+        const csvRenderer3 = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          style: "circle",
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            size: 8,
+            //color: "#000000",
+            material: { color: [0, 0, 0, 0.1] },
+            outline: {
+              style: "dash",
+              join: "round",
+              width: 0.8,
+              //color: [31, 38, 36, 0.5]
+              color: [0, 0, 0, 0.8]
+            }
+          }
+        };
+
 
         // Annual Coverage
         const csvLayer = new CSVLayer({
           url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
-          definitionExpression: "Annual_cover = 'yes'",
+          definitionExpression: "Annual_cover = 'yes' And Activity = 'active' And Supported = ''",
           popupTemplate: template,
           copyright: "sites",
           renderer: csvRenderer,
@@ -104,10 +122,20 @@
         // Supported
         const csvLayer2 = new CSVLayer({
           url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
-          definitionExpression: "Supported = 'yes'",
+          definitionExpression: "Supported = 'yes' And Activity = 'active'",
           popupTemplate: template,
           copyright: "sites",
           renderer: csvRenderer2,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+        });
+
+        // Entire Network
+        const csvLayer3 = new CSVLayer({
+          url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
+          definitionExpression: "Annual_cover = '' And Activity = 'active'",
+          popupTemplate: template,
+          copyright: "sites",
+          renderer: csvRenderer3,
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
 
@@ -155,7 +183,7 @@
               })
             ]
           },
-          layers: [permaFrost2070, permaFrost2020, csvLayer, csvLayer2]
+          layers: [permaFrost2070, permaFrost2020, csvLayer3, csvLayer, csvLayer2]
         });
 
         const view = new MapView({
