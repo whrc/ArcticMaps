@@ -1,0 +1,176 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Tower Sites Repres</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+      #topbar {
+        padding: 10px;
+        width: 190px;
+      }
+       .style-button {
+        margin: 3px;
+      }
+      button:disabled {
+        opacity: 0.4;
+        -moz-opacity: 0.4;
+        -webkit-opacity: 0.4;
+        cursor: default;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.23/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.23/"></script>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/layers/CSVLayer",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/layers/VectorTileLayer",
+        "esri/layers/TileLayer"
+      ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer) => {
+        const template = {
+          title: "Tower Information",
+          content:
+            "<p><b>Name:</b> {Site_Name}</p>" +
+            "<p><b>Site_ID:</b> {Site_Id}</p>" +
+            "<p><b>Contact:</b> {contact_name}</p>" +
+            "<p><b>Biome:</b> {Biome}</p>" +
+            "<p><b>Data Access:</b> <a href={Data}>{Data}</a></p>"
+        };
+
+        const csvRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          style: "circle",
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            size: 11,
+            color: "#2253ff",
+            outline: {
+              //style: "dash",
+              join: "round",
+              width: 1.0,
+              //color: [31, 38, 36, 0.5]
+              color: [255, 255, 255, 1]
+            }
+          }
+        };
+
+        const csvRenderer2 = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          style: "circle",
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            size: 11,
+            color: "#f3bb1f",
+            outline: {
+              //style: "dash",
+              join: "round",
+              width: 1.0,
+              //color: [31, 38, 36, 0.5]
+              color: [255, 255, 255, 1]
+            }
+          }
+        };
+
+
+        // Annual Coverage
+        const csvLayer = new CSVLayer({
+          url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
+          definitionExpression: "Annual_cover = 'yes'",
+          popupTemplate: template,
+          copyright: "sites",
+          renderer: csvRenderer,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+        });
+
+        // Supported
+        const csvLayer2 = new CSVLayer({
+          url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
+          definitionExpression: "Supported = 'yes'",
+          popupTemplate: template,
+          copyright: "sites",
+          renderer: csvRenderer2,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+        });
+
+        const permaRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          maxScale: 72000,
+          symbol: {
+            type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
+            //size: 6,
+            color: [0, 191, 184, 0.5],
+            outline: {
+              // autocasts as new SimpleLineSymbol()
+              width: 0.5,
+              color: "white"
+            }
+          }
+        };
+
+
+        const imageLayer = new TileLayer({
+          url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/Representativeness/MapServer",
+          maxScale: 0
+        });
+
+
+        const map = new Map({
+          basemap: {
+            baseLayers: [
+              new TileLayer({
+                portalItem: {
+                  id: "1b243539f4514b6ba35e7d995890db1d" // world hillshade
+                }
+              }),
+              new VectorTileLayer({
+                portalItem: {
+                  id: "06b93ca75bcc45b9a69fb5d262aaad8c" // community style vector tiles
+                },
+                blendMode: "multiply"
+              })
+            ]
+          },
+          layers: [imageLayer, csvLayer, csvLayer2]
+        });
+
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 3,
+          center: [-50, 40],
+          highlightOptions: {
+            fillOpacity: 0,
+            color: [243, 187, 31]
+          }
+        });
+
+
+
+      });
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+
+    </div>
+  </body>
+</html>
