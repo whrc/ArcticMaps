@@ -29,6 +29,19 @@
         -webkit-opacity: 0.4;
         cursor: default;
       }
+      #legend {
+        background-color: #ffffff;
+        padding: 1em;
+      }
+
+      .legend-title {
+        margin-top: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: black;
+      }
+
+
     </style>
 
     <link
@@ -44,8 +57,9 @@
         "esri/views/SceneView",
         "esri/layers/FeatureLayer",
         "esri/layers/VectorTileLayer",
-        "esri/layers/TileLayer"
-      ], (Map, CSVLayer, SceneView, FeatureLayer, VectorTileLayer, TileLayer) => {
+        "esri/layers/TileLayer",
+        "esri/widgets/Legend",
+      ], (Map, CSVLayer, SceneView, FeatureLayer, VectorTileLayer, TileLayer, Legend) => {
         const template = {
           title: "Tower Information",
           content:
@@ -61,7 +75,7 @@
           style: "circle",
           symbol: {
             type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-            size: 11,
+            size: 20,
             color: "#2253ff",
             outline: {
               //style: "dash",
@@ -78,7 +92,7 @@
           style: "circle",
           symbol: {
             type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-            size: 11,
+            size: 20,
             color: "#f3bb1f",
             outline: {
               //style: "dash",
@@ -95,7 +109,7 @@
           style: "circle",
           symbol: {
             type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-            size: 8,
+            size: 9,
             //color: "#000000",
             material: { color: [0, 0, 0, 0.1] },
             outline: {
@@ -171,9 +185,9 @@
           viewingMode: "global",
           camera: {
             position: [
-              -135,
-              65,
-              15512548.00000
+              0,
+              90,
+              20000000.00000
             ],
             heading: 0.00,
             tilt: 0.10
@@ -202,11 +216,17 @@
             }
           }
         });
+        view.ui.add("legend", "bottom-right");
+        view.popup.viewModel.includeDefaultActions = false;
 
       });
     </script>
   </head>
   <body>
-    <div id="viewDiv"></div>
+    <div id="viewDiv">
+      <div id="legend">
+        <img width=300 src="https://gfiske.github.io/ArcticMaps/rep_legend.png" alt="legend">
+      </div>
+    </div>
   </body>
 </html>
