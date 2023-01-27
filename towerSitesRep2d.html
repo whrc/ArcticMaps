@@ -5,7 +5,7 @@
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>Tower Sites 2d</title>
+    <title>Tower Sites Repres 2d</title>
 
     <style>
       html,
@@ -44,9 +44,8 @@
         "esri/views/MapView",
         "esri/layers/FeatureLayer",
         "esri/layers/VectorTileLayer",
-        "esri/layers/TileLayer",
-        "esri/widgets/Legend"
-      ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer, Legend) => {
+        "esri/layers/TileLayer"
+      ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer) => {
         const template = {
           title: "Tower Information",
           content:
@@ -100,7 +99,7 @@
             //color: "#000000",
             material: { color: [0, 0, 0, 0.1] },
             outline: {
-              //style: "dash",
+              style: "dash",
               join: "round",
               width: 0.8,
               //color: [31, 38, 36, 0.5]
@@ -108,7 +107,6 @@
             }
           }
         };
-
 
         // Annual Coverage
         const csvLayer = new CSVLayer({
@@ -140,33 +138,13 @@
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
 
-        const permaRenderer = {
-          type: "simple", // autocasts as new SimpleRenderer()
-          maxScale: 72000,
-          symbol: {
-            type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
-            //size: 6,
-            color: [0, 191, 184, 0.5],
-            outline: {
-              // autocasts as new SimpleLineSymbol()
-              width: 0.5,
-              color: "white"
-            }
-          }
-        };
 
-        const permaFrost2020 = new FeatureLayer({
-          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/PFI_thresh0_poly_no_ice/FeatureServer",
-          renderer: permaRenderer
-        });
-        permaFrost2020.maxScale = 9244648.868618;
 
-        const permaFrost2070 = new FeatureLayer({
-          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/RCP85_2070/FeatureServer",
-          renderer: permaRenderer,
-          visible: false
+        const imageLayer = new TileLayer({
+          url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/Representativeness/MapServer",
+          maxScale: 0
         });
-        permaFrost2070.maxScale = 9244648.868618;
+
 
         const map = new Map({
           basemap: {
@@ -184,7 +162,7 @@
               })
             ]
           },
-          layers: [permaFrost2070, permaFrost2020, csvLayer3, csvLayer, csvLayer2]
+          layers: [imageLayer, csvLayer, csvLayer2, csvLayer3]
         });
 
         const view = new MapView({
@@ -198,68 +176,12 @@
           }
         });
 
-        const legend = new Legend({
-          view: view,
-          layerInfos: [
-            {
-              layer: csvLayer3,
-              title: "Entire Network"
-            },
-            {
-              layer: csvLayer,
-              title: "Other Year-round Towers"
-            },
-            {
-              layer: csvLayer2,
-              title: "Supported Towers"
-            }
-          ]
-        });
 
-        // Add widget to the bottom right corner of the view
-        view.ui.add(legend, "bottom-right");
 
-        view.ui.add("topbar", "top-right");
-        const permaFrost2020Button = document.getElementById("permaFrost2020");
-        const permaFrost2070Button = document.getElementById("permaFrost2070");
-
-        permaFrost2020Button.addEventListener("click", () => {
-          setLayerVisibility(true, false);
-        });
-
-        permaFrost2070Button.addEventListener("click", () => {
-          setLayerVisibility(false, true);
-        });
-
-        function setLayerVisibility(permaFrost2020Vis, permaFrost2070Vis) {
-          permaFrost2020.visible = permaFrost2020Vis;
-          permaFrost2020Button.disabled = permaFrost2020Vis;
-          permaFrost2070.visible = permaFrost2070Vis;
-          permaFrost2070Button.disabled = permaFrost2070Vis;
-        }
       });
     </script>
   </head>
   <body>
     <div id="viewDiv"></div>
-    <div id="topbar" class="esri-widget" >
-      <h2 class="esri-heading"><center>Permafrost</center></h2>
-      <button
-        class="esri-button style-button"
-        id="permaFrost2020"
-        type="button"
-      >
-        Present Day
-      </button>
-      <button
-        class="esri-button style-button"
-        id="permaFrost2070"
-        type="button"
-        disabled
-      >
-        2070
-      </button>
-
-    </div>
   </body>
 </html>

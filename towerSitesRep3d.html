@@ -5,7 +5,7 @@
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>Tower Sites Repres</title>
+    <title>Tower Sites Repres 3d</title>
 
     <style>
       html,
@@ -41,11 +41,11 @@
       require([
         "esri/Map",
         "esri/layers/CSVLayer",
-        "esri/views/MapView",
+        "esri/views/SceneView",
         "esri/layers/FeatureLayer",
         "esri/layers/VectorTileLayer",
         "esri/layers/TileLayer"
-      ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer) => {
+      ], (Map, CSVLayer, SceneView, FeatureLayer, VectorTileLayer, TileLayer) => {
         const template = {
           title: "Tower Information",
           content:
@@ -165,25 +165,48 @@
           layers: [imageLayer, csvLayer, csvLayer2, csvLayer3]
         });
 
-        const view = new MapView({
+        const view = new SceneView({
           container: "viewDiv",
           map: map,
-          zoom: 3,
-          center: [-50, 40],
+          viewingMode: "global",
+          camera: {
+            position: [
+              -135,
+              65,
+              15512548.00000
+            ],
+            heading: 0.00,
+            tilt: 0.10
+          },
+
+          constraints: {
+            altitude: {
+              min: 100000
+            }
+          },
+          qualityProfile: "high",
+          alphaCompositingEnabled: true,
           highlightOptions: {
             fillOpacity: 0,
-            color: [243, 187, 31]
+            color: "#ffffff"
+          },
+          environment: {
+            background: {
+              type: "color",
+              color: [255, 255, 255, 0.4]
+            },
+            atmosphereEnabled: false,
+            starsEnabled: false,
+            lighting: {
+              type: "virtual"
+            }
           }
         });
-
-
 
       });
     </script>
   </head>
   <body>
     <div id="viewDiv"></div>
-
-    </div>
   </body>
 </html>
