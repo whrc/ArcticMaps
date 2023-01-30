@@ -29,6 +29,19 @@
         -webkit-opacity: 0.4;
         cursor: default;
       }
+
+      #legend {
+        background-color: #ffffff;
+        padding: 1em;
+      }
+
+      .legend-title {
+        margin-top: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: black;
+      }
+
     </style>
 
     <link
@@ -44,8 +57,9 @@
         "esri/views/MapView",
         "esri/layers/FeatureLayer",
         "esri/layers/VectorTileLayer",
-        "esri/layers/TileLayer"
-      ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer) => {
+        "esri/layers/TileLayer",
+        "esri/widgets/Legend"
+      ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer, Legend) => {
         const template = {
           title: "Tower Information",
           content:
@@ -175,6 +189,7 @@
             color: [243, 187, 31]
           }
         });
+        view.ui.add(legend, "bottom-right");
         view.popup.viewModel.includeDefaultActions = false;
 
 
@@ -182,6 +197,10 @@
     </script>
   </head>
   <body>
-    <div id="viewDiv"></div>
+    <div id="viewDiv">
+      <div id="legend">
+        <img width=350 src="https://gfiske.github.io/ArcticMaps/rep_legend.png" alt="legend">
+      </div>
+    </div>
   </body>
 </html>

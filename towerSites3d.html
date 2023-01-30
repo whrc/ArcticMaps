@@ -19,6 +19,17 @@
       .esri-legend {
         background-color: rgba(255, 255, 255, 0.8);
       }
+      #legend {
+        background-color: #ffffff;
+        padding: 1em;
+      }
+
+      .legend-title {
+        margin-top: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: black;
+      }
 
     </style>
 
@@ -34,8 +45,9 @@
         "esri/Basemap",
         "esri/widgets/BasemapToggle",
         "esri/widgets/Home",
-        "esri/views/3d/environment/VirtualLighting"
-      ], function (WebTileLayer, esriConfig, Map, CSVLayer, SceneView, TileLayer, Basemap, BasemapToggle, Home, VirtualLighting) {
+        "esri/views/3d/environment/VirtualLighting",
+        "esri/widgets/Legend"
+      ], function (WebTileLayer, esriConfig, Map, CSVLayer, SceneView, TileLayer, Basemap, BasemapToggle, Home, VirtualLighting, Legend) {
         esriConfig.apiKey = "AAPKc758424f9fd4486d9134df747a57c2fdrq8MzZy9VHqbfPzXNut5SvvoABhJdzImRZOvLbw3qin0_dz9IeNBEOADq9Up7hyG";
         const url =
           "https://gfiske.github.io/ArcticMaps/tower_sites.csv";
@@ -224,8 +236,8 @@
             //nextBasemap: "topo-vector"
           });
 
-          // Add widget to the top right corner of the view
           view.ui.add(toggle, "top-right");
+          view.ui.add(legend, "bottom-right");
           view.popup.viewModel.includeDefaultActions = false;
         });
 
@@ -235,6 +247,9 @@
 
   <body>
     <div id="viewDiv">
+      <div id="legend">
+        <img width=350 src="https://gfiske.github.io/ArcticMaps/tower_legend.png" alt="legend">
+      </div>
     </div>
   </body>
 </html>

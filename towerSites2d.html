@@ -29,6 +29,18 @@
         -webkit-opacity: 0.4;
         cursor: default;
       }
+      #legend {
+        background-color: #ffffff;
+        padding: 1em;
+      }
+
+      .legend-title {
+        margin-top: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: black;
+      }
+
     </style>
 
     <link
@@ -198,25 +210,8 @@
           }
         });
 
-        const legend = new Legend({
-          view: view,
-          layerInfos: [
-            {
-              layer: csvLayer3,
-              title: "Entire Network"
-            },
-            {
-              layer: csvLayer,
-              title: "Other Year-round Towers"
-            },
-            {
-              layer: csvLayer2,
-              title: "Supported Towers"
-            }
-          ]
-        });
 
-        // Add widget to the bottom right corner of the view
+
         view.ui.add(legend, "bottom-right");
 
         view.ui.add("topbar", "top-right");
@@ -242,16 +237,13 @@
     </script>
   </head>
   <body>
-    <div id="viewDiv"></div>
+    <div id="viewDiv">
+      <div id="legend">
+        <img width=350 src="https://gfiske.github.io/ArcticMaps/tower_legend.png" alt="legend">
+      </div>
+    </div>
     <div id="topbar" class="esri-widget" >
       <h2 class="esri-heading"><center>Permafrost</center></h2>
-      <button
-        class="esri-button style-button"
-        id="permaFrost2020"
-        type="button"
-      >
-        Present Day
-      </button>
       <button
         class="esri-button style-button"
         id="permaFrost2070"
@@ -260,7 +252,13 @@
       >
         2070
       </button>
-
+      <button
+        class="esri-button style-button"
+        id="permaFrost2020"
+        type="button"
+      >
+        Present Day
+      </button>
     </div>
   </body>
 </html>
