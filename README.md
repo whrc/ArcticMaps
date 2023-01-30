@@ -1,2 +1,2 @@
 # ArcticMaps
- Woodwell Arctic Carbon Monitoring web maps
+ Woodwell Arctic web maps
