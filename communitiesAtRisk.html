@@ -89,7 +89,6 @@
         // communities
         const csvLayer = new CSVLayer({
           url: "https://gfiske.github.io/ArcticMaps/communities.csv",
-          definitionExpression: "Annual_cover = 'yes' And Activity = 'active' And Supported = ''",
           popupTemplate: template,
           copyright: "sites",
           renderer: csvRenderer,
