@@ -62,8 +62,7 @@
         const template = {
           title: "Community Information",
           content:
-            "<p><b>Name:</b> {Name}</p>" +
-            "<p><b>Id:</b> {Id}</p>"
+            "<p><b>Name:</b> {Name}</p>"
         };
 
 
@@ -145,8 +144,8 @@
         const view = new MapView({
           container: "viewDiv",
           map: map,
-          zoom: 3,
-          center: [-50, 40],
+          zoom: 5,
+          center: [-150, 64],
           highlightOptions: {
             fillOpacity: 0,
             color: [243, 187, 31]
@@ -182,7 +181,7 @@
   <body>
     <div id="viewDiv">
       <div id="legend">
-        <img width=350 src="https://gfiske.github.io/ArcticMaps/tower_legend.png" alt="legend">
+        <img width=350 src="https://gfiske.github.io/ArcticMaps/communitiesAtRiskLegend.png" alt="legend">
       </div>
     </div>
     <div id="topbar" class="esri-widget" >
