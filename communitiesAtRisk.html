@@ -1,0 +1,211 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Alaska Communities at Risk</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+      #topbar {
+        padding: 10px;
+        width: 190px;
+      }
+       .style-button {
+        margin: 3px;
+      }
+      button:disabled {
+        opacity: 0.4;
+        -moz-opacity: 0.4;
+        -webkit-opacity: 0.4;
+        cursor: default;
+      }
+      #legend {
+        background-color: #ffffff;
+        padding: 1em;
+      }
+
+      .legend-title {
+        margin-top: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: black;
+      }
+
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.23/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.23/"></script>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/layers/CSVLayer",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/layers/VectorTileLayer",
+        "esri/layers/TileLayer",
+        "esri/widgets/Legend"
+      ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer, Legend) => {
+        const template = {
+          title: "Tower Information",
+          content:
+            "<p><b>Name:</b> {Site_Name}</p>" +
+            "<p><b>Site_ID:</b> {Site_Id}</p>" +
+            "<p><b>Contact:</b> {contact_name}</p>" +
+            "<p><b>Biome:</b> {Biome}</p>" +
+            "<p><b>Data Access:</b> <a href={Data}>{Data}</a></p>"
+        };
+
+
+        const csvRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          style: "circle",
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            size: 8,
+            //color: "#000000",
+            material: { color: [0, 0, 0, 0.1] },
+            outline: {
+              //style: "dash",
+              join: "round",
+              width: 0.8,
+              //color: [31, 38, 36, 0.5]
+              color: [0, 0, 0, 0.8]
+            }
+          }
+        };
+
+
+        // communities
+        const csvLayer = new CSVLayer({
+          url: "https://gfiske.github.io/ArcticMaps/communities.csv",
+          definitionExpression: "Annual_cover = 'yes' And Activity = 'active' And Supported = ''",
+          popupTemplate: template,
+          copyright: "sites",
+          renderer: csvRenderer,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+        });
+
+        const permaRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          maxScale: 72000,
+          symbol: {
+            type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
+            //size: 6,
+            color: [0, 191, 184, 0.5],
+            outline: {
+              // autocasts as new SimpleLineSymbol()
+              width: 0.5,
+              color: "white"
+            }
+          }
+        };
+
+        const permaFrost2020 = new FeatureLayer({
+          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/PFI_thresh0_poly_no_ice/FeatureServer",
+          renderer: permaRenderer
+        });
+        permaFrost2020.maxScale = 9244648.868618;
+
+        const permaFrost2070 = new FeatureLayer({
+          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/RCP85_2070/FeatureServer",
+          renderer: permaRenderer,
+          visible: false
+        });
+        permaFrost2070.maxScale = 9244648.868618;
+
+        const map = new Map({
+          basemap: {
+            baseLayers: [
+              new TileLayer({
+                portalItem: {
+                  id: "1b243539f4514b6ba35e7d995890db1d" // world hillshade
+                }
+              }),
+              new VectorTileLayer({
+                portalItem: {
+                  id: "06b93ca75bcc45b9a69fb5d262aaad8c" // community style vector tiles
+                },
+                blendMode: "multiply"
+              })
+            ]
+          },
+          layers: [permaFrost2070, permaFrost2020, csvLayer]
+        });
+
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 3,
+          center: [-50, 40],
+          highlightOptions: {
+            fillOpacity: 0,
+            color: [243, 187, 31]
+          }
+        });
+
+
+
+        view.ui.add(legend, "bottom-right");
+
+        view.ui.add("topbar", "top-right");
+        const permaFrost2020Button = document.getElementById("permaFrost2020");
+        const permaFrost2070Button = document.getElementById("permaFrost2070");
+
+        permaFrost2020Button.addEventListener("click", () => {
+          setLayerVisibility(true, false);
+        });
+
+        permaFrost2070Button.addEventListener("click", () => {
+          setLayerVisibility(false, true);
+        });
+
+        function setLayerVisibility(permaFrost2020Vis, permaFrost2070Vis) {
+          permaFrost2020.visible = permaFrost2020Vis;
+          permaFrost2020Button.disabled = permaFrost2020Vis;
+          permaFrost2070.visible = permaFrost2070Vis;
+          permaFrost2070Button.disabled = permaFrost2070Vis;
+        }
+        view.popup.viewModel.includeDefaultActions = false;
+      });
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv">
+      <div id="legend">
+        <img width=350 src="https://gfiske.github.io/ArcticMaps/tower_legend.png" alt="legend">
+      </div>
+    </div>
+    <div id="topbar" class="esri-widget" >
+      <h2 class="esri-heading"><center>Permafrost</center></h2>
+      <button
+        class="esri-button style-button"
+        id="permaFrost2070"
+        type="button"
+        disabled
+      >
+        2070
+      </button>
+      <button
+        class="esri-button style-button"
+        id="permaFrost2020"
+        type="button"
+      >
+        Present Day
+      </button>
+    </div>
+  </body>
+</html>
