@@ -137,7 +137,7 @@
         // supported
         const csvLayer2 = new CSVLayer({
           url: "https://gfiske.github.io/ArcticMaps/communities.csv",
-          definitionExpression: "pp = 1",
+          definitionExpression: "supported = 1",
           popupTemplate: template,
           copyright: "sites",
           renderer: csvRenderer2,
@@ -189,7 +189,7 @@
               })
             ]
           },
-          layers: [permaFrost2070, permaFrost2020, csvLayer2, csvLayer]
+          layers: [permaFrost2070, permaFrost2020, csvLayer, csvLayer2]
         });
 
         const view = new MapView({
