@@ -65,7 +65,7 @@
             "<p><b>Name:</b> {Name}</p>"
         };
 
-
+        // at risk
         const csvRenderer = {
           type: "simple", // autocasts as new SimpleRenderer()
           style: "circle",
@@ -80,6 +80,24 @@
               width: 0.8,
               //color: [31, 38, 36, 0.5]
               color: [0, 0, 0, 0.8]
+            }
+          }
+        };
+
+        // supported villages
+        const csvRenderer2 = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          style: "circle",
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            size: 11,
+            color: "#f3bb1f",
+            outline: {
+              //style: "dash",
+              join: "round",
+              width: 1.0,
+              //color: [31, 38, 36, 0.5]
+              color: [255, 255, 255, 1]
             }
           }
         };
@@ -111,6 +129,18 @@
           popupTemplate: template,
           copyright: "sites",
           renderer: csvRenderer,
+          labelingInfo: labelClass,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+        });
+
+
+        // supported
+        const csvLayer = new CSVLayer({
+          url: "https://gfiske.github.io/ArcticMaps/communities.csv",
+          definitionExpression: "pp = '1'",
+          popupTemplate: template,
+          copyright: "sites",
+          renderer: csvRenderer2,
           labelingInfo: labelClass,
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
@@ -159,7 +189,7 @@
               })
             ]
           },
-          layers: [permaFrost2070, permaFrost2020, csvLayer]
+          layers: [permaFrost2070, permaFrost2020, csvLayer, csvLayer2]
         });
 
         const view = new MapView({
@@ -195,7 +225,7 @@
           permaFrost2070.visible = permaFrost2070Vis;
           permaFrost2070Button.disabled = permaFrost2070Vis;
         }
-        view.popup.viewModel.includeDefaultActions = true;
+        view.popup.viewModel.includeDefaultActions = false;
       });
     </script>
   </head>
