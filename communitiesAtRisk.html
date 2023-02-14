@@ -84,6 +84,23 @@
           }
         };
 
+        // labels
+        const labelClass = {
+          // autocasts as new LabelClass()
+          symbol: {
+            type: "text",  // autocasts as new TextSymbol()
+            color: "green",
+            font: {  // autocast as new Font()
+              family: "Playfair Display",
+              size: 12,
+              weight: "bold"
+            }
+          },
+          labelPlacement: "above-center",
+          labelExpressionInfo: {
+            expression: "$feature.Name"
+          }
+        };
 
         // communities
         const csvLayer = new CSVLayer({
@@ -91,6 +108,7 @@
           popupTemplate: template,
           copyright: "sites",
           renderer: csvRenderer,
+          labelingInfo: labelClass,
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
 
