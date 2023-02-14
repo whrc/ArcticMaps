@@ -89,17 +89,20 @@
           // autocasts as new LabelClass()
           symbol: {
             type: "text",  // autocasts as new TextSymbol()
-            color: "green",
+            color: "#808080",
             font: {  // autocast as new Font()
-              family: "Playfair Display",
-              size: 12,
-              weight: "bold"
+              family: "Arial",
+              size: 10,
+              weight: "bold",
+              opacity: 0.8
             }
           },
           labelPlacement: "above-center",
           labelExpressionInfo: {
             expression: "$feature.Name"
-          }
+          },
+          maxScale: 0,
+          minScale: 25000000,
         };
 
         // communities
@@ -192,14 +195,14 @@
           permaFrost2070.visible = permaFrost2070Vis;
           permaFrost2070Button.disabled = permaFrost2070Vis;
         }
-        view.popup.viewModel.includeDefaultActions = false;
+        view.popup.viewModel.includeDefaultActions = true;
       });
     </script>
   </head>
   <body>
     <div id="viewDiv">
       <div id="legend">
-        <img width=350 src="https://gfiske.github.io/ArcticMaps/communitiesAtRiskLegend.png" alt="legend">
+        <img width=250 src="https://gfiske.github.io/ArcticMaps/communitiesAtRiskLegend.png" alt="legend">
       </div>
     </div>
     <div id="topbar" class="esri-widget" >
