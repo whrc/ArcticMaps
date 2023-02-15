@@ -164,14 +164,14 @@
           url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/PFI_thresh0_poly_no_ice/FeatureServer",
           renderer: permaRenderer
         });
-        permaFrost2020.maxScale = 9244648.868618;
+        permaFrost2020.maxScale = 4244648.868618;
 
-        const permaFrost2070 = new FeatureLayer({
-          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/RCP85_2070/FeatureServer",
+        const permaFrost2050_45 = new FeatureLayer({
+          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/RCP45_2050/FeatureServer",
           renderer: permaRenderer,
           visible: false
         });
-        permaFrost2070.maxScale = 9244648.868618;
+        permaFrost2050_45.maxScale = 4244648.868618;
 
         const map = new Map({
           basemap: {
@@ -189,7 +189,7 @@
               })
             ]
           },
-          layers: [permaFrost2070, permaFrost2020, csvLayer, csvLayer2]
+          layers: [permaFrost2050_45, permaFrost2020, csvLayer, csvLayer2]
         });
 
         const view = new MapView({
@@ -209,21 +209,21 @@
         // add layer control
         view.ui.add("topbar", "top-right");
         const permaFrost2020Button = document.getElementById("permaFrost2020");
-        const permaFrost2070Button = document.getElementById("permaFrost2070");
+        const permaFrost2050_45Button = document.getElementById("permaFrost2050_45");
 
         permaFrost2020Button.addEventListener("click", () => {
           setLayerVisibility(true, false);
         });
 
-        permaFrost2070Button.addEventListener("click", () => {
+        permaFrost2050_45Button.addEventListener("click", () => {
           setLayerVisibility(false, true);
         });
 
-        function setLayerVisibility(permaFrost2020Vis, permaFrost2070Vis) {
+        function setLayerVisibility(permaFrost2020Vis, permaFrost2050_45Vis) {
           permaFrost2020.visible = permaFrost2020Vis;
           permaFrost2020Button.disabled = permaFrost2020Vis;
-          permaFrost2070.visible = permaFrost2070Vis;
-          permaFrost2070Button.disabled = permaFrost2070Vis;
+          permaFrost2050_45.visible = permaFrost2050_45Vis;
+          permaFrost2050_45Button.disabled = permaFrost2050_45Vis;
         }
         view.popup.viewModel.includeDefaultActions = false;
       });
@@ -239,10 +239,10 @@
       <h2 class="esri-heading"><center>Permafrost</center></h2>
       <button
         class="esri-button style-button"
-        id="permaFrost2070"
+        id="permaFrost2050_45"
         type="button"
       >
-        2070
+        2050
       </button>
       <button
         class="esri-button style-button"
