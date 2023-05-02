@@ -62,18 +62,18 @@
         const template = {
           title: "Site Information",
           content:
-            "<p><b>Name:</b> {Site}</p>"
+            "<p><b>Name:</b> {Site}</p><p><b>Notes:</b> {Notes}</p>"
         };
 
-        // at risk
+        // Running
         const csvRenderer = {
           type: "simple", // autocasts as new SimpleRenderer()
           style: "circle",
           symbol: {
             type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-            size: 8,
-            //color: "#000000",
-            material: { color: [0, 0, 0, 0.1] },
+            size: 14,
+            color: "#f3bb1f",
+            //material: { color: [0, 0, 0, 0.1] },
             outline: {
               //style: "dash",
               join: "round",
@@ -84,14 +84,32 @@
           }
         };
 
-        // supported villages
+        // In Progress
         const csvRenderer2 = {
           type: "simple", // autocasts as new SimpleRenderer()
           style: "circle",
           symbol: {
             type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
             size: 11,
-            color: "#f3bb1f",
+            color: "#2253ff",
+            outline: {
+              //style: "dash",
+              join: "round",
+              width: 1.0,
+              //color: [31, 38, 36, 0.5]
+              color: [255, 255, 255, 1]
+            }
+          }
+        };
+
+        // Potential
+        const csvRenderer3 = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          style: "circle",
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            size: 11,
+            color: "#a5a5a5",
             outline: {
               //style: "dash",
               join: "round",
@@ -123,9 +141,10 @@
           minScale: 10000000,
         };
 
-        // communities
-        const csvLayer = new CSVLayer({
+        // Running data
+        const csvLayer1 = new CSVLayer({
           url: "https://whrc.github.io/ArcticMaps/SiteStatusSheet.csv",
+          definitionExpression: "Status = 'Running'",
           popupTemplate: template,
           copyright: "Site",
           renderer: csvRenderer,
@@ -134,13 +153,24 @@
         });
 
 
-        // supported
+        // In Progress data
         const csvLayer2 = new CSVLayer({
           url: "https://whrc.github.io/ArcticMaps/SiteStatusSheet.csv",
-          definitionExpression: "Status = In Progress",
+          definitionExpression: "Status = 'In Progress'",
           popupTemplate: template,
           copyright: "Site",
           renderer: csvRenderer2,
+          labelingInfo: labelClass,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+        });
+
+        // Potential data
+        const csvLayer3 = new CSVLayer({
+          url: "https://whrc.github.io/ArcticMaps/SiteStatusSheet.csv",
+          definitionExpression: "Status = 'Potential'",
+          popupTemplate: template,
+          copyright: "Site",
+          renderer: csvRenderer3,
           labelingInfo: labelClass,
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
@@ -189,7 +219,7 @@
               })
             ]
           },
-          layers: [permaFrost2050_45, permaFrost2020, csvLayer, csvLayer2]
+          layers: [permaFrost2050_45, permaFrost2020, csvLayer1, csvLayer2, csvLayer3]
         });
 
         const view = new MapView({
