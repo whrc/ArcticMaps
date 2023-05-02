@@ -60,9 +60,9 @@
         "esri/widgets/Legend"
       ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer, Legend) => {
         const template = {
-          title: "Community Information",
+          title: "Site Information",
           content:
-            "<p><b>Name:</b> {Name}</p>"
+            "<p><b>Name:</b> {Site}</p>"
         };
 
         // at risk
@@ -117,7 +117,7 @@
           },
           labelPlacement: "above-center",
           labelExpressionInfo: {
-            expression: "$feature.Name"
+            expression: "$feature.Site"
           },
           maxScale: 0,
           minScale: 10000000,
@@ -137,9 +137,9 @@
         // supported
         const csvLayer2 = new CSVLayer({
           url: "https://whrc.github.io/ArcticMaps/SiteStatusSheet.csv",
-          definitionExpression: "Status = Running",
+          definitionExpression: "Status = In Progress",
           popupTemplate: template,
-          copyright: "sites",
+          copyright: "Site",
           renderer: csvRenderer2,
           labelingInfo: labelClass,
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
@@ -195,8 +195,8 @@
         const view = new MapView({
           container: "viewDiv",
           map: map,
-          zoom: 5,
-          center: [-150, 64],
+          zoom: 3,
+          center: [-90, 50],
           highlightOptions: {
             fillOpacity: 0,
             color: [243, 187, 31]
