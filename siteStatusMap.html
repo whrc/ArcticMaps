@@ -1,0 +1,257 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Alaska Communities at Risk</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+      #topbar {
+        padding: 10px;
+        width: 190px;
+      }
+       .style-button {
+        margin: 3px;
+      }
+      button:disabled {
+        opacity: 0.4;
+        -moz-opacity: 0.4;
+        -webkit-opacity: 0.4;
+        cursor: default;
+      }
+      #legend {
+        background-color: #ffffff;
+        padding: 1em;
+      }
+
+      .legend-title {
+        margin-top: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: black;
+      }
+
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.23/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.23/"></script>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/layers/CSVLayer",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/layers/VectorTileLayer",
+        "esri/layers/TileLayer",
+        "esri/widgets/Legend"
+      ], (Map, CSVLayer, MapView, FeatureLayer, VectorTileLayer, TileLayer, Legend) => {
+        const template = {
+          title: "Community Information",
+          content:
+            "<p><b>Name:</b> {Name}</p>"
+        };
+
+        // at risk
+        const csvRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          style: "circle",
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            size: 8,
+            //color: "#000000",
+            material: { color: [0, 0, 0, 0.1] },
+            outline: {
+              //style: "dash",
+              join: "round",
+              width: 0.8,
+              //color: [31, 38, 36, 0.5]
+              color: [0, 0, 0, 0.8]
+            }
+          }
+        };
+
+        // supported villages
+        const csvRenderer2 = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          style: "circle",
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            size: 11,
+            color: "#f3bb1f",
+            outline: {
+              //style: "dash",
+              join: "round",
+              width: 1.0,
+              //color: [31, 38, 36, 0.5]
+              color: [255, 255, 255, 1]
+            }
+          }
+        };
+
+        // labels
+        const labelClass = {
+          // autocasts as new LabelClass()
+          symbol: {
+            type: "text",  // autocasts as new TextSymbol()
+            color: "#808080",
+            font: {  // autocast as new Font()
+              family: "Arial",
+              size: 10,
+              weight: "bold",
+              opacity: 0.8
+            }
+          },
+          labelPlacement: "above-center",
+          labelExpressionInfo: {
+            expression: "$feature.Name"
+          },
+          maxScale: 0,
+          minScale: 10000000,
+        };
+
+        // communities
+        const csvLayer = new CSVLayer({
+          url: "https://whrc.github.io/ArcticMaps/SiteStatusSheet.csv",
+          popupTemplate: template,
+          copyright: "Site",
+          renderer: csvRenderer,
+          labelingInfo: labelClass,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+        });
+
+
+        // supported
+        const csvLayer2 = new CSVLayer({
+          url: "https://whrc.github.io/ArcticMaps/SiteStatusSheet.csv",
+          definitionExpression: "Status = Running",
+          popupTemplate: template,
+          copyright: "sites",
+          renderer: csvRenderer2,
+          labelingInfo: labelClass,
+          effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
+        });
+
+        const permaRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          maxScale: 72000,
+          symbol: {
+            type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
+            //size: 6,
+            color: [0, 191, 184, 0.5],
+            outline: {
+              // autocasts as new SimpleLineSymbol()
+              width: 0.5,
+              color: "white"
+            }
+          }
+        };
+
+        const permaFrost2020 = new FeatureLayer({
+          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/PFI_thresh0_poly_no_ice/FeatureServer",
+          renderer: permaRenderer
+        });
+        permaFrost2020.maxScale = 4244648.868618;
+
+        const permaFrost2050_45 = new FeatureLayer({
+          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/RCP45_2050/FeatureServer",
+          renderer: permaRenderer,
+          visible: false
+        });
+        permaFrost2050_45.maxScale = 4244648.868618;
+
+        const map = new Map({
+          basemap: {
+            baseLayers: [
+              new TileLayer({
+                portalItem: {
+                  id: "1b243539f4514b6ba35e7d995890db1d" // world hillshade
+                }
+              }),
+              new VectorTileLayer({
+                portalItem: {
+                  id: "06b93ca75bcc45b9a69fb5d262aaad8c" // community style vector tiles
+                },
+                blendMode: "multiply"
+              })
+            ]
+          },
+          layers: [permaFrost2050_45, permaFrost2020, csvLayer, csvLayer2]
+        });
+
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 5,
+          center: [-150, 64],
+          highlightOptions: {
+            fillOpacity: 0,
+            color: [243, 187, 31]
+          }
+        });
+
+
+        // add legend
+        view.ui.add(legend, "bottom-right");
+        // add layer control
+        view.ui.add("topbar", "top-right");
+        const permaFrost2020Button = document.getElementById("permaFrost2020");
+        const permaFrost2050_45Button = document.getElementById("permaFrost2050_45");
+
+        permaFrost2020Button.addEventListener("click", () => {
+          setLayerVisibility(true, false);
+        });
+
+        permaFrost2050_45Button.addEventListener("click", () => {
+          setLayerVisibility(false, true);
+        });
+
+        function setLayerVisibility(permaFrost2020Vis, permaFrost2050_45Vis) {
+          permaFrost2020.visible = permaFrost2020Vis;
+          permaFrost2020Button.disabled = permaFrost2020Vis;
+          permaFrost2050_45.visible = permaFrost2050_45Vis;
+          permaFrost2050_45Button.disabled = permaFrost2050_45Vis;
+        }
+        view.popup.viewModel.includeDefaultActions = false;
+      });
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv">
+      <div id="legend">
+        <img width=250 src="https://whrc.github.io/ArcticMaps/communitiesAtRiskLegend.png" alt="legend">
+      </div>
+    </div>
+    <div id="topbar" class="esri-widget" >
+      <h2 class="esri-heading"><center>Permafrost</center></h2>
+      <button
+        class="esri-button style-button"
+        id="permaFrost2050_45"
+        type="button"
+      >
+        2050
+      </button>
+      <button
+        class="esri-button style-button"
+        id="permaFrost2020"
+        type="button"
+        disabled
+      >
+        Present Day
+      </button>
+    </div>
+  </body>
+</html>
