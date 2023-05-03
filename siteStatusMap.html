@@ -5,7 +5,7 @@
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>Alaska Communities at Risk</title>
+    <title>Tower Sites</title>
 
     <style>
       html,
@@ -175,33 +175,12 @@
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
 
-        const permaRenderer = {
-          type: "simple", // autocasts as new SimpleRenderer()
-          maxScale: 72000,
-          symbol: {
-            type: "simple-fill", // autocasts as new SimpleMarkerSymbol()
-            //size: 6,
-            color: [0, 191, 184, 0.5],
-            outline: {
-              // autocasts as new SimpleLineSymbol()
-              width: 0.5,
-              color: "white"
-            }
-          }
-        };
 
-        const permaFrost2020 = new FeatureLayer({
-          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/PFI_thresh0_poly_no_ice/FeatureServer",
-          renderer: permaRenderer
+        const imageLayer = new TileLayer({
+          url: "https://tiles.arcgis.com/tiles/tWF28TdwCm3ZaV7m/arcgis/rest/services/Representativeness/MapServer",
+          maxScale: 0
         });
-        permaFrost2020.maxScale = 4244648.868618;
 
-        const permaFrost2050_45 = new FeatureLayer({
-          url: "https://services.arcgis.com/tWF28TdwCm3ZaV7m/arcgis/rest/services/RCP45_2050/FeatureServer",
-          renderer: permaRenderer,
-          visible: false
-        });
-        permaFrost2050_45.maxScale = 4244648.868618;
 
         const map = new Map({
           basemap: {
@@ -219,7 +198,7 @@
               })
             ]
           },
-          layers: [permaFrost2050_45, permaFrost2020, csvLayer1, csvLayer2, csvLayer3]
+          layers: [imageLayer, csvLayer1, csvLayer2, csvLayer3]
         });
 
         const view = new MapView({
@@ -236,52 +215,14 @@
 
         // add legend
         view.ui.add(legend, "bottom-right");
-        // add layer control
-        view.ui.add("topbar", "top-right");
-        const permaFrost2020Button = document.getElementById("permaFrost2020");
-        const permaFrost2050_45Button = document.getElementById("permaFrost2050_45");
-
-        permaFrost2020Button.addEventListener("click", () => {
-          setLayerVisibility(true, false);
-        });
-
-        permaFrost2050_45Button.addEventListener("click", () => {
-          setLayerVisibility(false, true);
-        });
-
-        function setLayerVisibility(permaFrost2020Vis, permaFrost2050_45Vis) {
-          permaFrost2020.visible = permaFrost2020Vis;
-          permaFrost2020Button.disabled = permaFrost2020Vis;
-          permaFrost2050_45.visible = permaFrost2050_45Vis;
-          permaFrost2050_45Button.disabled = permaFrost2050_45Vis;
-        }
-        view.popup.viewModel.includeDefaultActions = false;
       });
     </script>
   </head>
   <body>
     <div id="viewDiv">
       <div id="legend">
-        <img width=250 src="https://whrc.github.io/ArcticMaps/siteStatusLegend.png" alt="legend">
+        <img width=250 src="https://whrc.github.io/ArcticMaps/siteStatusLegend_w_rep.png" alt="legend">
       </div>
     </div>
-    <div id="topbar" class="esri-widget" >
-      <h2 class="esri-heading"><center>Permafrost</center></h2>
-      <button
-        class="esri-button style-button"
-        id="permaFrost2050_45"
-        type="button"
-      >
-        2050
-      </button>
-      <button
-        class="esri-button style-button"
-        id="permaFrost2020"
-        type="button"
-        disabled
-      >
-        Present Day
-      </button>
-    </div>
-  </body>
+    </body>
 </html>
