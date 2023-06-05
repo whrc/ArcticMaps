@@ -124,7 +124,7 @@
 
         // Annual Coverage
         const csvLayer = new CSVLayer({
-          url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
+          url: "https://whrc.github.io/ArcticMaps/tower_sites.csv",
           definitionExpression: "Annual_cover = 'yes' And Activity = 'active' And Supported = ''",
           popupTemplate: template,
           copyright: "sites",
@@ -134,7 +134,7 @@
 
         // Supported
         const csvLayer2 = new CSVLayer({
-          url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
+          url: "https://whrc.github.io/ArcticMaps/tower_sites.csv",
           definitionExpression: "Supported = 'yes' And Activity = 'active'",
           popupTemplate: template,
           copyright: "sites",
@@ -144,7 +144,7 @@
 
         // Entire Network
         const csvLayer3 = new CSVLayer({
-          url: "https://gfiske.github.io/ArcticMaps/tower_sites.csv",
+          url: "https://whrc.github.io/ArcticMaps/tower_sites.csv",
           definitionExpression: "Annual_cover = '' And Activity = 'active'",
           popupTemplate: template,
           copyright: "sites",
@@ -239,7 +239,7 @@
   <body>
     <div id="viewDiv">
       <div id="legend">
-        <img width=350 src="https://gfiske.github.io/ArcticMaps/tower_legend.png" alt="legend">
+        <img width=350 src="https://whrc.github.io/ArcticMaps/tower_legend.png" alt="legend">
       </div>
     </div>
     <div id="topbar" class="esri-widget" >
