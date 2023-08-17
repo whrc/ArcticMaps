@@ -120,7 +120,7 @@
           }
         };
 
-                        // Supported
+        // Supported
         const csvRenderer4 = {
           type: "simple", // autocasts as new SimpleRenderer()
           style: "circle",
@@ -137,6 +137,7 @@
             }
           }
         };
+        
         // labels
         const labelClass = {
           // autocasts as new LabelClass()
@@ -169,7 +170,6 @@
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
 
-
         // In Progress data
         const csvLayer2 = new CSVLayer({
           url: "https://whrc.github.io/ArcticMaps/SiteStatusSheet.csv",
@@ -192,13 +192,13 @@
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
 
-                // Supported data
+            // Supported data
         const csvLayer4 = new CSVLayer({
           url: "https://whrc.github.io/ArcticMaps/SiteStatusSheet.csv",
           definitionExpression: "Status = 'Supported'",
           popupTemplate: template,
           copyright: "Site",
-          renderer: csvRenderer2,
+          renderer: csvRenderer4,
           labelingInfo: labelClass,
           effect: "brightness(1.0) drop-shadow(1px, 1px, 1.2px)"// bloom(0.8, 0.5px, 0.1)"
         });
