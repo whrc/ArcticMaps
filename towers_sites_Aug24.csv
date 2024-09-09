@@ -98,7 +98,7 @@ Ivotuk,US-Ivo,68.48649,-155.75022,"Walter Oechel, Donatella Zona","woechel@mail.
 Jokioinen agricultural field,FI-Jok,60.8986,23.51345,Tuomas Laurila,tuomas.laurila@fmi.fi,Broadleaf crop,no,2000,2003,inactive,,,Finland,not_annual,http://sites.fluxdata.org/FI-Jok/,no,no
 Kaamanen wetland,FI-Kaa,69.1406,27.2698,"Mika Aurela, Tuomas Laurila","mika.aurela@fmi.fi, tuomas.laurila@fmi.fi",Wetland,CH4,1997,2013,active,2011,2013,Finland,yes,http://gaia.agraria.unitus.it/home/data/request-data; http://www.fluxdata.org:8080/sitepages/siteInfo.aspx?FI-Kaa,yes,no
 Kalevansuo,FI-Kns,60.64683333,24.356167,Tuomas Laurila,tuomas.laurila@fmi.fi,Evergreen Needleleaf Forest,no,2004,2009,inactive,,,Finland,not_annual,http://www.fluxdata.org:8080/sitepages/siteInfo.aspx?FI-Kns,no,no
-Kangiqsuallujjuaq,,58.71096767,-65.88109874,Alexandre Roy,,Shrub Tundra,CH4,2024,,active,2024,,Canada,yes,,yes,no
+Kangiqsuallujjuaq,,58.71096767,-65.88109874,Alexandre Roy,,Shrub Tundra,CH4,2024,,active,2024,,Canada,yes,,yes,yes
 Kaskara Crop,RU-KsC,57.25146,65.96931,Elisa Fleischer,elisa.fleischer@uni-muenster.de,GRA,CH4,2013,2013,inactive,2013,2013,Russia,not_annual,,no,no
 Kenttarova,FI-Ken,67.9873,24.243,"Tuomas Laurila, Mika Aurela","tuomas.laurila@fmi.fi, mika.aurela@fmi.fi",Norway spruce forest,no,2004,,active,,,Finland,not_annual,https://meta.icos-cp.eu/resources/stations/ES_FI-Ken,yes,no
 Kilpisjaervi,,69.0629,20.7975,Anna Virkkala; Annalea Lohila; Ivan Mammarella,avirkkala@woodwellclimate.org,Tundra heath,no,2023,,active,,,Finland,yes,,yes,no
